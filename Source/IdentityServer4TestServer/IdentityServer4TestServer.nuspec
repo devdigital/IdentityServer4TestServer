@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
-        <id>IdentityServer4TestServerFactory</id>
+        <id>IdentityServer4TestServer</id>
         <version><%version%></version>
         <authors>DevDigital</authors>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,7 +12,7 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="bin\Release\netstandard2.0\IdentityServer4TestServerFactory.dll" target="lib\netcoreapp\IdentityServer4TestServerFactory.dll" />
-        <file src="bin\Release\netstandard2.0\IdentityServer4TestServerFactory.dll" target="lib\netstandard2.0\IdentityServer4TestServerFactory.dll" />
+        <file src="bin\Release\netstandard2.0\IdentityServer4TestServer.dll" target="lib\netcoreapp\IdentityServer4TestServer.dll" />
+        <file src="bin\Release\netstandard2.0\IdentityServer4TestServer.dll" target="lib\netstandard2.0\IdentityServer4TestServer.dll" />
     </files>
 </package>
