@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
         <id>IdentityServer4TestServer</id>
-        <version><%version%></version>
+        <version>0.3.0</version>
         <authors>DevDigital</authors>
         <projectUrl>https://github.com/devdigital/IdentityServer4TestServer</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Identity Server 4 testing helper for .NET Core.</description>
         <dependencies>            
-            <dependency id="IdentityServer4" Version="2.2.0" />
-            <dependency id="Microsoft.AspNetCore.TestHost" Version="2.0.3" />          
+            <dependency id="IdentityServer4" version="2.2.0" />
+            <dependency id="Microsoft.AspNetCore.TestHost" version="2.0.3" />          
         </dependencies>
     </metadata>
     <files>
