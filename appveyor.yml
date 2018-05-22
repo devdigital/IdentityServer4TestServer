@@ -1,0 +1,26 @@
+version: '{build}'
+pull_requests:
+  do_not_increment_build_number: true
+image: Visual Studio 2017
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+build:
+  publish_nuget: true
+build_script:
+- ps: .\build.ps1
+test: off
+artifacts:
+- path: '**\artifacts\*.nupkg'
+  name: NuGet
+nuget:
+  disable_publish_on_pr: true
+deploy:
+- provider: NuGet
+  name: production
+  api_key:
+    secure: P7/VG8DnNs9JW9dCjNnLmtto46T/WD0P+Jf1L6KY+UawIdMpo2glsAfgWNMVge/R
+  on:
+    appveyor_repo_tag: true
