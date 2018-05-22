@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AutoFixture.Automoq" Version="4.3.0" />
     <PackageReference Include="AutoFixture.Xunit2" Version="4.3.0" />
+    <PackageReference Include="Castle.Core" Version="4.2.1" />
     <PackageReference Include="xunit.assert" Version="2.3.1" />
     <PackageReference Include="Xunit.core" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
