@@ -4,6 +4,7 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -17,6 +18,8 @@ namespace IdentityServer4TestServer
         private readonly List<IdentityResource> identityResources;
 
         private readonly List<ApiResource> apiResources;
+
+        private Action<WebHostBuilderContext, IConfigurationBuilder> configuration;
 
         private Action<IApplicationBuilder> configureApp;
 
@@ -100,6 +103,12 @@ namespace IdentityServer4TestServer
             return this as TServerFactory;
         }
 
+        public TServerFactory WithConfiguration(Action<WebHostBuilderContext, IConfigurationBuilder> configuration)
+        {
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            return this as TServerFactory;
+        }
+
         public TServerFactory WithConfigureApp(Action<IApplicationBuilder> app)
         {
             this.configureApp = app ?? throw new ArgumentNullException(nameof(app));
@@ -115,6 +124,7 @@ namespace IdentityServer4TestServer
         public virtual IIdentityServer Create()
         {
             var hostBuilder = new WebHostBuilder()
+                .ConfigureAppConfiguration(configuration ?? DefaultConfiguration)
                 .Configure(configureApp ?? DefaultConfigureApp)
                 .ConfigureServices(configureServices ?? DefaultConfigureServices);
 
@@ -126,6 +136,10 @@ namespace IdentityServer4TestServer
 
             var testServer = new TestServer(hostBuilder);
             return new IdentityServer(testServer);
+        }
+
+        private void DefaultConfiguration(WebHostBuilderContext context, IConfigurationBuilder builder)
+        {
         }
 
         private void DefaultConfigureServices(WebHostBuilderContext context, IServiceCollection services)
