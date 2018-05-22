@@ -41,7 +41,7 @@ namespace IdentityServer4TestServer
             return this as TClientFactory;
         }
 
-        public IdentityServerClient Create(IIdentityServer server)
+        public virtual IdentityServerClient Create(IIdentityServer server)
         {
             if (server == null)
             {

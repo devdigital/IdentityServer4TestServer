@@ -4,6 +4,7 @@
         <id>IdentityServer4TestServer</id>
         <version><%version%></version>
         <authors>DevDigital</authors>
+        <projectUrl>https://github.com/devdigital/IdentityServer4TestServer</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Identity Server 4 testing helper for .NET Core.</description>
         <dependencies>            

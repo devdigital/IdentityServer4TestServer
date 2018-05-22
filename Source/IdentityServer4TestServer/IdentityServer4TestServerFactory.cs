@@ -112,7 +112,7 @@ namespace IdentityServer4TestServer
             return this as TServerFactory;
         }
 
-        public IIdentityServer Create()
+        public virtual IIdentityServer Create()
         {
             var hostBuilder = new WebHostBuilder()
                 .Configure(configureApp ?? DefaultConfigureApp)
