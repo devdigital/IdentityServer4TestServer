@@ -1,0 +1,14 @@
+{
+  "name": "IdentityServer4TestServer",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/devdigital/IdentityServer4TestServer.git",
+  "author": "devdigital <devdigital.cloud@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "release": "standard-version"
+  },
+  "dependencies": {
+    "standard-version": "^4.3.0"
+  }
+}
