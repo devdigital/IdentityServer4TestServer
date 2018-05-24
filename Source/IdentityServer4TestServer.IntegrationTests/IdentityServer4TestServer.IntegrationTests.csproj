@@ -7,10 +7,23 @@
     <StartupObject />
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\IdentityServer4TestServer.IntegrationTests.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\IdentityServer4TestServer.IntegrationTests.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoFixture.Automoq" Version="4.3.0" />
     <PackageReference Include="AutoFixture.Xunit2" Version="4.3.0" />
     <PackageReference Include="Castle.Core" Version="4.2.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" />
     <PackageReference Include="xunit.assert" Version="2.3.1" />
     <PackageReference Include="Xunit.core" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
