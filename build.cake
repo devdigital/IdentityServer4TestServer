@@ -8,6 +8,8 @@ Information("Running target " + target + " in configuration " + configuration);
 var packageJson = new PackageJson(Context, "./package.json");
 var buildNumber = packageJson.GetVersion();
 
+Information($"Building version {buildNumber}");
+
 var artifactsDirectory = Directory("./artifacts");
 
 var projects = new List<string>
@@ -27,7 +29,7 @@ Task("SetNuSpecVersion")
     {
         var nuSpecFile = "./Source/IdentityServer4TestServer/IdentityServer4TestServer.nuspec";
         TransformTextFile(nuSpecFile)
-            .WithToken("version",  buildNumber.ToString())
+            .WithToken("version", buildNumber.ToString())
             .Save(nuSpecFile);
     });
 
