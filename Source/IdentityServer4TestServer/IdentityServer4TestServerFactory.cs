@@ -7,6 +7,7 @@ namespace IdentityServer4TestServer
     using System;
     using System.Collections.Generic;
     using IdentityServer4.Models;
+    using IdentityServer4.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
@@ -34,6 +35,8 @@ namespace IdentityServer4TestServer
         private Action<WebHostBuilderContext, IServiceCollection> configureServices;
 
         private ILoggerFactory loggerFactory;
+
+        private IdentityServerEventCapture eventCapture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServer4TestServerFactory{TServerFactory}"/> class.
@@ -183,6 +186,17 @@ namespace IdentityServer4TestServer
         }
 
         /// <summary>
+        /// Adds event capture.
+        /// </summary>
+        /// <param name="eventCapture">The event capture.</param>
+        /// <returns>The server factory.</returns>
+        public TServerFactory WithEventCapture(IdentityServerEventCapture eventCapture)
+        {
+            this.eventCapture = eventCapture ?? throw new ArgumentNullException(nameof(eventCapture));
+            return this as TServerFactory;
+        }
+
+        /// <summary>
         /// Creates this instance.
         /// </summary>
         /// <returns>The identity server.</returns>
@@ -191,7 +205,16 @@ namespace IdentityServer4TestServer
             var hostBuilder = new WebHostBuilder()
                 .ConfigureAppConfiguration(this.configuration ?? this.DefaultConfiguration)
                 .Configure(this.configureApp ?? this.DefaultConfigureApp)
-                .ConfigureServices(this.configureServices ?? this.DefaultConfigureServices);
+                .ConfigureServices((context, services) =>
+                {
+                    if (this.eventCapture != null)
+                    {
+                        services.AddSingleton<IEventSink>(new EventCaptureEventSink(this.eventCapture));
+                    }
+
+                    var configure = this.configureServices ?? this.DefaultConfigureServices;
+                    configure(context, services);
+                });
 
             if (this.loggerFactory != null)
             {
@@ -209,7 +232,12 @@ namespace IdentityServer4TestServer
 
         private void DefaultConfigureServices(WebHostBuilderContext context, IServiceCollection services)
         {
-            var identityServerConfig = services.AddIdentityServer();
+            var identityServerConfig = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseSuccessEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseErrorEvents = true;
+            });
 
             if (this.clients != null)
             {
