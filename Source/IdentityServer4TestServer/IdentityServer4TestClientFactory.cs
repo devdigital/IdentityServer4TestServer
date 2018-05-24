@@ -1,7 +1,15 @@
-﻿using System;
+﻿// <copyright file="IdentityServer4TestClientFactory.cs" company="DevDigital">
+// Copyright (c) DevDigital. All rights reserved.
+// </copyright>
 
 namespace IdentityServer4TestServer
 {
+    using System;
+
+    /// <summary>
+    /// Identity server test client factory.
+    /// </summary>
+    /// <typeparam name="TClientFactory">The type of the client factory.</typeparam>
     public abstract class IdentityServer4TestClientFactory<TClientFactory>
         where TClientFactory : IdentityServer4TestClientFactory<TClientFactory>
     {
@@ -9,6 +17,11 @@ namespace IdentityServer4TestServer
 
         private string currentClientSecret;
 
+        /// <summary>
+        /// Adds a client identifier.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        /// <returns>The factory.</returns>
         public TClientFactory WithClientId(string clientId)
         {
             if (string.IsNullOrWhiteSpace(clientId))
@@ -20,6 +33,11 @@ namespace IdentityServer4TestServer
             return this as TClientFactory;
         }
 
+        /// <summary>
+        /// Adds a client secret.
+        /// </summary>
+        /// <param name="clientSecret">The client secret.</param>
+        /// <returns>The factory.</returns>
         public TClientFactory WithClientSecret(string clientSecret)
         {
             if (string.IsNullOrWhiteSpace(clientSecret))
@@ -31,16 +49,11 @@ namespace IdentityServer4TestServer
             return this as TClientFactory;
         }
 
-        public TClientFactory WithIdentityServer(IIdentityServer identityServer)
-        {
-            if (identityServer == null)
-            {
-                throw new ArgumentNullException(nameof(identityServer));
-            }
-
-            return this as TClientFactory;
-        }
-
+        /// <summary>
+        /// Creates the test client using the specified server.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <returns>The test client.</returns>
         public virtual IdentityServerClient Create(IIdentityServer server)
         {
             if (server == null)

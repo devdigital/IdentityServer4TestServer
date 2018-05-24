@@ -1,5 +1,12 @@
-﻿namespace IdentityServer4TestServer.IntegrationTests.Helpers
+﻿// <copyright file="TestIdentityServer4TestServerFactory.cs" company="DevDigital">
+// Copyright (c) DevDigital. All rights reserved.
+// </copyright>
+
+namespace IdentityServer4TestServer.IntegrationTests.Helpers
 {
+    /// <summary>
+    /// Identity server test server factory.
+    /// </summary>
     public class TestIdentityServer4TestServerFactory : IdentityServer4TestServerFactory<TestIdentityServer4TestServerFactory>
     {
     }

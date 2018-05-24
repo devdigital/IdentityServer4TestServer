@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using IdentityServer4.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿// <copyright file="IdentityServer4TestServerFactory.cs" company="DevDigital">
+// Copyright (c) DevDigital. All rights reserved.
+// </copyright>
 
 namespace IdentityServer4TestServer
 {
+    using System;
+    using System.Collections.Generic;
+    using IdentityServer4.Models;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.TestHost;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+
+    /// <summary>
+    /// Identity server test server factory.
+    /// </summary>
+    /// <typeparam name="TServerFactory">The type of the server factory.</typeparam>
     public abstract class IdentityServer4TestServerFactory<TServerFactory>
         where TServerFactory : IdentityServer4TestServerFactory<TServerFactory>
     {
@@ -26,7 +34,10 @@ namespace IdentityServer4TestServer
         private Action<WebHostBuilderContext, IServiceCollection> configureServices;
 
         private ILoggerFactory loggerFactory;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IdentityServer4TestServerFactory{TServerFactory}"/> class.
+        /// </summary>
         protected IdentityServer4TestServerFactory()
         {
             this.clients = new List<Client>();
@@ -34,12 +45,22 @@ namespace IdentityServer4TestServer
             this.apiResources = new List<ApiResource>();
         }
 
+        /// <summary>
+        /// Adds logging.
+        /// </summary>
+        /// <param name="loggerFactory">The logger factory.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithLogging(ILoggerFactory loggerFactory)
         {
             this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Adds a client.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithClient(Client client)
         {
             if (client == null)
@@ -50,6 +71,11 @@ namespace IdentityServer4TestServer
             return this.WithClients(new List<Client> { client });
         }
 
+        /// <summary>
+        /// Adds clients.
+        /// </summary>
+        /// <param name="clients">The clients.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithClients(IEnumerable<Client> clients)
         {
             if (clients == null)
@@ -61,6 +87,11 @@ namespace IdentityServer4TestServer
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Adds the identity resource.
+        /// </summary>
+        /// <param name="identityResource">The identity resource.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithIdentityResource(IdentityResource identityResource)
         {
             if (identityResource == null)
@@ -71,6 +102,11 @@ namespace IdentityServer4TestServer
             return this.WithIdentityResources(new List<IdentityResource> { identityResource });
         }
 
+        /// <summary>
+        /// Adds identity resources.
+        /// </summary>
+        /// <param name="identityResources">The identity resources.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithIdentityResources(IEnumerable<IdentityResource> identityResources)
         {
             if (identityResources == null)
@@ -82,6 +118,11 @@ namespace IdentityServer4TestServer
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Adds an API resource.
+        /// </summary>
+        /// <param name="apiResource">The API resource.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithApiResource(ApiResource apiResource)
         {
             if (apiResource == null)
@@ -92,6 +133,11 @@ namespace IdentityServer4TestServer
             return this.WithApiResources(new List<ApiResource> { apiResource });
         }
 
+        /// <summary>
+        /// Adds API resources.
+        /// </summary>
+        /// <param name="apiResources">The API resources.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithApiResources(IEnumerable<ApiResource> apiResources)
         {
             if (apiResources == null)
@@ -103,30 +149,49 @@ namespace IdentityServer4TestServer
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Adds configuration.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithConfiguration(Action<WebHostBuilderContext, IConfigurationBuilder> configuration)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Adds app configuration.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithConfigureApp(Action<IApplicationBuilder> app)
         {
             this.configureApp = app ?? throw new ArgumentNullException(nameof(app));
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Adds configure services.
+        /// </summary>
+        /// <param name="configureServices">The configure services.</param>
+        /// <returns>The server factory.</returns>
         public TServerFactory WithConfigureServices(Action<WebHostBuilderContext, IServiceCollection> configureServices)
         {
             this.configureServices = configureServices ?? throw new ArgumentNullException(nameof(configureServices));
             return this as TServerFactory;
         }
 
+        /// <summary>
+        /// Creates this instance.
+        /// </summary>
+        /// <returns>The identity server.</returns>
         public virtual IIdentityServer Create()
         {
             var hostBuilder = new WebHostBuilder()
-                .ConfigureAppConfiguration(configuration ?? DefaultConfiguration)
-                .Configure(configureApp ?? DefaultConfigureApp)
-                .ConfigureServices(configureServices ?? DefaultConfigureServices);
+                .ConfigureAppConfiguration(this.configuration ?? this.DefaultConfiguration)
+                .Configure(this.configureApp ?? this.DefaultConfigureApp)
+                .ConfigureServices(this.configureServices ?? this.DefaultConfigureServices);
 
             if (this.loggerFactory != null)
             {
@@ -170,7 +235,7 @@ namespace IdentityServer4TestServer
 
         private void DefaultConfigureApp(IApplicationBuilder app)
         {
-            app.UseIdentityServer();            
+            app.UseIdentityServer();
         }
     }
 }
