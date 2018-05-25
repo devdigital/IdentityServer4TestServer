@@ -2,8 +2,6 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-using IdentityServer4;
-
 namespace IdentityServer4TestServer
 {
     using System;

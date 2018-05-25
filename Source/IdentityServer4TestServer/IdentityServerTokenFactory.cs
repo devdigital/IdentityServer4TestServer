@@ -2,8 +2,6 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-using Microsoft.AspNetCore.TestHost;
-
 namespace IdentityServer4TestServer
 {
     using System;
@@ -12,6 +10,7 @@ namespace IdentityServer4TestServer
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.TestHost;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -30,6 +29,12 @@ namespace IdentityServer4TestServer
             this.testServer = testServer ?? throw new ArgumentNullException(nameof(testServer));
         }
 
+        /// <summary>
+        /// Creates a token.
+        /// </summary>
+        /// <param name="lifetime">The lifetime.</param>
+        /// <param name="claims">The claims.</param>
+        /// <returns>The token.</returns>
         public async Task<string> CreateToken(int lifetime, List<Claim> claims)
         {
             var json = JsonConvert.SerializeObject(new IdentityServerTokenRequest
@@ -49,6 +54,14 @@ namespace IdentityServer4TestServer
             }
         }
 
+        /// <summary>
+        /// Creates a client token.
+        /// </summary>
+        /// <param name="lifetime">The lifetime.</param>
+        /// <param name="clientId">The client identifier.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <param name="audiences">The audiences.</param>
+        /// <returns>The client token.</returns>
         public async Task<string> CreateClientToken(
             int lifetime,
             string clientId,
