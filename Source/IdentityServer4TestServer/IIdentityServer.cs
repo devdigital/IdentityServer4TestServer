@@ -2,6 +2,8 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
+using IdentityServer4;
+
 namespace IdentityServer4TestServer
 {
     using System;
@@ -26,5 +28,11 @@ namespace IdentityServer4TestServer
         /// </summary>
         /// <returns>The HTTP message handler.</returns>
         HttpMessageHandler CreateHandler();
+
+        /// <summary>
+        /// Creates tools for token generation.
+        /// </summary>
+        /// <returns>The tools.</returns>
+        IdentityServerTokenFactory CreateTokenFactory();
     }
 }

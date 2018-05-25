@@ -39,5 +39,12 @@ namespace IdentityServer4TestServer
         {
             return this.testServer.CreateHandler();
         }
+
+        /// <inheritdoc />
+        public IdentityServerTokenFactory CreateTokenFactory()
+        {
+            return new IdentityServerTokenFactory(
+                this.testServer);
+        }
     }
 }
