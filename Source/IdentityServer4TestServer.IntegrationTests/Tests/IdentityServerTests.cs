@@ -6,6 +6,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
 {
     using System.Collections.Generic;
     using System.Net;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using AutoFixture.Xunit2;
     using IdentityServer4.Models;
@@ -168,6 +169,47 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
                     var response = await client.GetToken();
                     Assert.Equal(HttpStatusCode.OK, response.HttpStatusCode);
                 }
+            }
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task CreateTokenReturnsToken(
+            TestIdentityServer4TestServerFactory serverFactory,
+            int lifetime)
+        {
+            using (var server = serverFactory.Create())
+            {
+                var tokenFactory = server.CreateTokenFactory();
+
+                var token = await tokenFactory.CreateToken(
+                    lifetime: lifetime,
+                    claims: new List<Claim>());
+
+                Assert.NotNull(token);
+            }
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task CreateClientTokenReturnsToken(
+            TestIdentityServer4TestServerFactory serverFactory,
+            int lifetime,
+            string clientId,
+            IEnumerable<string> scopes,
+            IEnumerable<string> audiences)
+        {
+            using (var server = serverFactory.Create())
+            {
+                var tokenFactory = server.CreateTokenFactory();
+
+                var token = await tokenFactory.CreateClientToken(
+                    lifetime: lifetime,
+                    clientId: clientId,
+                    scopes: scopes,
+                    audiences: audiences);
+
+                Assert.NotNull(token);
             }
         }
     }

@@ -26,5 +26,11 @@ namespace IdentityServer4TestServer
         /// </summary>
         /// <returns>The HTTP message handler.</returns>
         HttpMessageHandler CreateHandler();
+
+        /// <summary>
+        /// Creates tools for token generation.
+        /// </summary>
+        /// <returns>The tools.</returns>
+        IdentityServerTokenFactory CreateTokenFactory();
     }
 }

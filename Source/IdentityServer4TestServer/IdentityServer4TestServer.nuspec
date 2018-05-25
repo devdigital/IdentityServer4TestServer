@@ -9,7 +9,8 @@
         <description>Identity Server 4 testing helper for .NET Core.</description>
         <dependencies>            
             <dependency id="IdentityServer4" version="2.2.0" />
-            <dependency id="Microsoft.AspNetCore.TestHost" version="2.0.3" />          
+            <dependency id="Microsoft.AspNetCore.TestHost" version="2.0.3" />
+            <dependency id="Microsoft.AspNetCore.Mvc" version="2.0.4" />
         </dependencies>
     </metadata>
     <files>

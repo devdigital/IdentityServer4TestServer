@@ -38,6 +38,8 @@ namespace IdentityServer4TestServer
 
         private IdentityServerEventCapture eventCapture;
 
+        private bool enableTokenTools;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServer4TestServerFactory{TServerFactory}"/> class.
         /// </summary>
@@ -46,6 +48,7 @@ namespace IdentityServer4TestServer
             this.clients = new List<Client>();
             this.identityResources = new List<IdentityResource>();
             this.apiResources = new List<ApiResource>();
+            this.enableTokenTools = true;
         }
 
         /// <summary>
@@ -164,6 +167,17 @@ namespace IdentityServer4TestServer
         }
 
         /// <summary>
+        /// Adds token tools via MVC.
+        /// </summary>
+        /// <param name="enable">if set to <c>true</c> enable MVC.</param>
+        /// <returns>The server factory.</returns>
+        public TServerFactory WithTokenTools(bool enable)
+        {
+            this.enableTokenTools = enable;
+            return this as TServerFactory;
+        }
+
+        /// <summary>
         /// Adds app configuration.
         /// </summary>
         /// <param name="app">The application.</param>
@@ -204,9 +218,24 @@ namespace IdentityServer4TestServer
         {
             var hostBuilder = new WebHostBuilder()
                 .ConfigureAppConfiguration(this.configuration ?? this.DefaultConfiguration)
-                .Configure(this.configureApp ?? this.DefaultConfigureApp)
+                .Configure(app =>
+                {
+                    var configure = this.configureApp ?? this.DefaultConfigureApp;
+                    configure(app);
+
+                    if (this.enableTokenTools)
+                    {
+                        app.UseMvc();
+                    }
+                })
                 .ConfigureServices((context, services) =>
                 {
+                    if (this.enableTokenTools)
+                    {
+                        services.AddMvc().AddApplicationPart(
+                            typeof(TokenController).Assembly);
+                    }
+
                     if (this.eventCapture != null)
                     {
                         services.AddSingleton<IEventSink>(new EventCaptureEventSink(this.eventCapture));
