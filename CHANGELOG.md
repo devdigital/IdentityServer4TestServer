@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.1"></a>
+## [0.5.1](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.5.0...v0.5.1) (2018-05-29)
+
+
+### Bug Fixes
+
+* use serializable claim type for token generation ([3b76d5d](https://github.com/devdigital/IdentityServer4TestServer/commit/3b76d5d))
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.4.1...v0.5.0) (2018-05-25)
 
