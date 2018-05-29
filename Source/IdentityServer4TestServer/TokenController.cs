@@ -5,7 +5,6 @@
 namespace IdentityServer4TestServer
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using IdentityServer4;
     using Microsoft.AspNetCore.Mvc;
@@ -38,6 +37,11 @@ namespace IdentityServer4TestServer
         [Route("api/test/token/create")]
         public async Task<IActionResult> CreateToken([FromBody]IdentityServerTokenRequest request)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return new UnprocessableEntityResult<IdentityServerTokenRequest>();
+            }
+
             var token = await this.identityServerTools.IssueJwtAsync(
                 lifetime: request.Lifetime,
                 claims: request.Claims);
@@ -59,6 +63,11 @@ namespace IdentityServer4TestServer
         [Route("api/test/token/create-client")]
         public async Task<IActionResult> CreateClientToken([FromBody]IdentityServerClientTokenRequest request)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return new UnprocessableEntityResult<IdentityServerClientTokenRequest>();
+            }
+
             var token = await this.identityServerTools.IssueClientJwtAsync(
                 lifetime: request.Lifetime,
                 clientId: request.ClientId,
