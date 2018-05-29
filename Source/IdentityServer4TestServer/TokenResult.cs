@@ -5,17 +5,19 @@
 namespace IdentityServer4TestServer
 {
     using System;
+    using System.Net;
 
     /// <summary>
     /// Token result.
     /// </summary>
     public class TokenResult
     {
-        private TokenResult(bool isSuccess, string token, string errorMessage)
+        private TokenResult(bool isSuccess, string token, HttpStatusCode statusCode, string responseBody)
         {
             this.IsSuccess = isSuccess;
             this.Token = token;
-            this.ErrorMessage = errorMessage;
+            this.StatusCode = statusCode;
+            this.ResponseBody = responseBody;
         }
 
         /// <summary>
@@ -35,12 +37,20 @@ namespace IdentityServer4TestServer
         public string Token { get; }
 
         /// <summary>
+        /// Gets the status code.
+        /// </summary>
+        /// <value>
+        /// The status code.
+        /// </value>
+        public HttpStatusCode StatusCode { get; }
+
+        /// <summary>
         /// Gets the error message.
         /// </summary>
         /// <value>
         /// The error message.
         /// </value>
-        public string ErrorMessage { get; }
+        public string ResponseBody { get; }
 
         /// <summary>
         /// Success token result.
@@ -54,22 +64,28 @@ namespace IdentityServer4TestServer
                 throw new ArgumentNullException(nameof(token));
             }
 
-            return new TokenResult(isSuccess: true, token: token, errorMessage: null);
+            return new TokenResult(
+                isSuccess: true,
+                token: token,
+                statusCode: HttpStatusCode.OK,
+                responseBody: null);
         }
 
         /// <summary>
         /// Failure token result.
         /// </summary>
-        /// <param name="errorMessage">The error message.</param>
-        /// <returns>The token result.</returns>
-        public static TokenResult Failure(string errorMessage)
+        /// <param name="statusCode">The status code.</param>
+        /// <param name="responseBody">The response body.</param>
+        /// <returns>
+        /// The token result.
+        /// </returns>
+        public static TokenResult Failure(HttpStatusCode statusCode, string responseBody)
         {
-            if (string.IsNullOrWhiteSpace(errorMessage))
-            {
-                throw new ArgumentNullException(nameof(errorMessage));
-            }
-
-            return new TokenResult(isSuccess: false, token: null, errorMessage: errorMessage);
+            return new TokenResult(
+                isSuccess: false,
+                token: null,
+                statusCode: statusCode,
+                responseBody: responseBody);
         }
     }
 }

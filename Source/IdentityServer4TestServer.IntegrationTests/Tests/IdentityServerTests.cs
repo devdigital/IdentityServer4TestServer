@@ -2,8 +2,6 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-using IdentityModel.Client;
-
 namespace IdentityServer4TestServer.IntegrationTests.Tests
 {
     using System.Collections.Generic;
@@ -11,6 +9,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
     using System.Security.Claims;
     using System.Threading.Tasks;
     using AutoFixture.Xunit2;
+    using IdentityModel.Client;
     using IdentityServer4.Models;
     using IdentityServer4TestServer.IntegrationTests.Helpers;
     using IdentityServer4TestServer.IntegrationTests.Logging;

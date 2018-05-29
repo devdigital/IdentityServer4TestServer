@@ -55,14 +55,14 @@ namespace IdentityServer4TestServer
             using (var client = this.testServer.CreateClient())
             {
                 var response = await client.PostAsync("api/test/token/create", content);
-                var responseString = await response.Content.ReadAsStringAsync();
+                var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    return TokenResult.Failure(responseString);
+                    return TokenResult.Failure(response.StatusCode, responseBody);
                 }
 
-                var token = JsonConvert.DeserializeObject<IdentityServerTokenResponse>(responseString);
+                var token = JsonConvert.DeserializeObject<IdentityServerTokenResponse>(responseBody);
                 return TokenResult.Success(token.Token);
             }
         }
@@ -94,14 +94,14 @@ namespace IdentityServer4TestServer
             using (var client = this.testServer.CreateClient())
             {
                 var response = await client.PostAsync("api/test/token/create-client", content);
-                var responseString = await response.Content.ReadAsStringAsync();
+                var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    return TokenResult.Failure(responseString);
+                    return TokenResult.Failure(response.StatusCode, responseBody);
                 }
 
-                var token = JsonConvert.DeserializeObject<IdentityServerTokenResponse>(responseString);
+                var token = JsonConvert.DeserializeObject<IdentityServerTokenResponse>(responseBody);
                 return TokenResult.Success(token.Token);
             }
         }
