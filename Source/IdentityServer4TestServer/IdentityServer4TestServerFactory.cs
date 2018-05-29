@@ -263,6 +263,7 @@ namespace IdentityServer4TestServer
         {
             var identityServerConfig = services.AddIdentityServer(options =>
             {
+                options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseSuccessEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseErrorEvents = true;
