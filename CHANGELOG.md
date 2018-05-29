@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.3"></a>
+## [0.5.3](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.5.2...v0.5.3) (2018-05-29)
+
+
+### Bug Fixes
+
+* add status code to token result ([782b073](https://github.com/devdigital/IdentityServer4TestServer/commit/782b073))
+
+
+
 <a name="0.5.2"></a>
 ## [0.5.2](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.5.1...v0.5.2) (2018-05-29)
 
