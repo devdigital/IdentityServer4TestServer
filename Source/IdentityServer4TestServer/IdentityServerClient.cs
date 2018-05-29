@@ -69,7 +69,10 @@ namespace IdentityServer4TestServer
         public async Task<TokenClient> CreateTokenClient()
         {
             var disco = await this.GetDiscovery();
-            return new TokenClient(disco.TokenEndpoint);
+            using (var proxyHandler = this.server.CreateHandler())
+            {
+                return new TokenClient(disco.TokenEndpoint, this.ClientId, this.ClientSecret, proxyHandler);
+            }
         }
 
         /// <summary>
@@ -98,22 +101,36 @@ namespace IdentityServer4TestServer
         }
 
         /// <summary>
+        /// Creates the token client.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        /// <param name="clientSecret">The client secret.</param>
+        /// <param name="innerHttpMessageHandler">The inner HTTP message handler.</param>
+        /// <param name="authenticationStyle">The authentication style.</param>
+        /// <returns>The token client.</returns>
+        public async Task<TokenClient> CreateTokenClient(
+            string clientId,
+            string clientSecret,
+            HttpMessageHandler innerHttpMessageHandler,
+            AuthenticationStyle authenticationStyle)
+        {
+            var disco = await this.GetDiscovery();
+            return new TokenClient(disco.TokenEndpoint, clientId, clientSecret, innerHttpMessageHandler, authenticationStyle);
+        }
+
+        /// <summary>
         /// Gets a token.
         /// </summary>
         /// <returns>The token response.</returns>
         public async Task<TokenResponse> GetToken()
         {
+            var disco = await this.GetDiscovery();
             using (var proxyHandler = this.server.CreateHandler())
             {
-                using (var discoClient = new DiscoveryClient(this.server.BaseAddress.ToString(), proxyHandler))
+                using (var tokenClient = new TokenClient(disco.TokenEndpoint, this.ClientId, this.ClientSecret, proxyHandler))
                 {
-                    var disco = await discoClient.GetAsync();
-
-                    using (var tokenClient = new TokenClient(disco.TokenEndpoint, this.ClientId, this.ClientSecret, proxyHandler))
-                    {
-                        var tokenResponse = await tokenClient.RequestClientCredentialsAsync();
-                        return tokenResponse;
-                    }
+                    var tokenResponse = await tokenClient.RequestClientCredentialsAsync();
+                    return tokenResponse;
                 }
             }
         }

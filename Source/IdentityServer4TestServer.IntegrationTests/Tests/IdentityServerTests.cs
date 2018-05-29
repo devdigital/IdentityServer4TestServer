@@ -2,6 +2,8 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
+using IdentityModel.Client;
+
 namespace IdentityServer4TestServer.IntegrationTests.Tests
 {
     using System.Collections.Generic;
@@ -233,6 +235,57 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
                     audiences: audiences);
 
                 Assert.NotNull(token);
+            }
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task GetDiscoveryDocReturnsDoc(
+            TestIdentityServer4TestServerFactory serverFactory,
+            TestIdentityServer4TestClientFactory clientFactory)
+        {
+            using (var server = serverFactory.Create())
+            {
+                using (var client = clientFactory.Create(server))
+                {
+                    var disco = await client.GetDiscovery();
+                    Assert.NotNull(disco.TokenEndpoint);
+                }
+            }
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task RequestClientCredentialsReturnsAcccessToken(
+            TestIdentityServer4TestServerFactory serverFactory,
+            TestIdentityServer4TestClientFactory clientFactory,
+            string clientId,
+            string clientSecret,
+            string apiResourceName,
+            string apiResourceDisplayName)
+        {
+            using (var server = serverFactory
+                .WithLogging(new XUnitLoggerFactory(this.output))
+                .WithApiResource(new ApiResource(apiResourceName, apiResourceDisplayName))
+                .WithClient(new Client
+            {
+                ClientId = clientId,
+                ClientSecrets = new List<Secret> { new Secret(clientSecret.Sha256()) },
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                AllowedScopes = new List<string> { apiResourceName },
+            }).Create())
+            {
+                using (var client = clientFactory
+                    .WithClientId(clientId)
+                    .WithClientSecret(clientSecret)
+                    .Create(server))
+                {
+                    using (var tokenClient = await client.CreateTokenClient())
+                    {
+                        var response = await tokenClient.RequestClientCredentialsAsync();
+                        Assert.NotNull(response.AccessToken);
+                    }
+                }
             }
         }
     }
