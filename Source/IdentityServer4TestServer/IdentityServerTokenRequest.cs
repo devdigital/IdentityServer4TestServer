@@ -5,12 +5,26 @@
 namespace IdentityServer4TestServer
 {
     using System.Collections.Generic;
-    using System.Security.Claims;
 
+    /// <summary>
+    /// Identity server token request.
+    /// </summary>
     public class IdentityServerTokenRequest
     {
+        /// <summary>
+        /// Gets or sets the lifetime.
+        /// </summary>
+        /// <value>
+        /// The lifetime.
+        /// </value>
         public int Lifetime { get; set; }
 
-        public List<Claim> Claims { get; set; }
+        /// <summary>
+        /// Gets or sets the claims.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
+        public List<SerializableClaim> Claims { get; set; }
     }
 }

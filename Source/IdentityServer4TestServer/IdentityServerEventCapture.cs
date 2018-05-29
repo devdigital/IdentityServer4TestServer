@@ -98,9 +98,8 @@ namespace IdentityServer4TestServer
         /// <param name="value">The value.</param>
         /// <param name="comparison">The comparison.</param>
         /// <returns>
-        ///   <c>true</c> if [contains message starts with] [the specified value]; otherwise, <c>false</c>.
+        ///   <c>true</c> if events contains a message that starts with the specified value; otherwise, <c>false</c>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">value</exception>
         public bool ContainsMessageStartsWith(string value, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if (string.IsNullOrWhiteSpace(value))

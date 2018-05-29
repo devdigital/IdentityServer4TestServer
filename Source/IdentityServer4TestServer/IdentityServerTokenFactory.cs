@@ -6,6 +6,8 @@ namespace IdentityServer4TestServer
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Security.Claims;
     using System.Text;
@@ -35,12 +37,17 @@ namespace IdentityServer4TestServer
         /// <param name="lifetime">The lifetime.</param>
         /// <param name="claims">The claims.</param>
         /// <returns>The token.</returns>
-        public async Task<string> CreateToken(int lifetime, List<Claim> claims)
+        public async Task<TokenResult> CreateToken(int lifetime, List<Claim> claims)
         {
             var json = JsonConvert.SerializeObject(new IdentityServerTokenRequest
             {
                 Lifetime = lifetime,
-                Claims = claims,
+                Claims = claims.Select(c => new SerializableClaim(
+                    type: c.Type,
+                    value: c.Value,
+                    valueType: c.ValueType,
+                    issuer: c.Issuer,
+                    originalIssuer: c.OriginalIssuer)).ToList(),
             });
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -49,8 +56,14 @@ namespace IdentityServer4TestServer
             {
                 var response = await client.PostAsync("api/test/token/create", content);
                 var responseString = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return TokenResult.Failure(responseString);
+                }
+
                 var token = JsonConvert.DeserializeObject<IdentityServerTokenResponse>(responseString);
-                return token.Token;
+                return TokenResult.Success(token.Token);
             }
         }
 
@@ -62,7 +75,7 @@ namespace IdentityServer4TestServer
         /// <param name="scopes">The scopes.</param>
         /// <param name="audiences">The audiences.</param>
         /// <returns>The client token.</returns>
-        public async Task<string> CreateClientToken(
+        public async Task<TokenResult> CreateClientToken(
             int lifetime,
             string clientId,
             IEnumerable<string> scopes,
@@ -82,8 +95,14 @@ namespace IdentityServer4TestServer
             {
                 var response = await client.PostAsync("api/test/token/create-client", content);
                 var responseString = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return TokenResult.Failure(responseString);
+                }
+
                 var token = JsonConvert.DeserializeObject<IdentityServerTokenResponse>(responseString);
-                return token.Token;
+                return TokenResult.Success(token.Token);
             }
         }
     }

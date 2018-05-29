@@ -182,11 +182,34 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             {
                 var tokenFactory = server.CreateTokenFactory();
 
-                var token = await tokenFactory.CreateToken(
+                var tokenResult = await tokenFactory.CreateToken(
                     lifetime: lifetime,
                     claims: new List<Claim>());
 
-                Assert.NotNull(token);
+                Assert.NotNull(tokenResult.Token);
+            }
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task CreateTokenWithClaimsReturnsToken(
+            TestIdentityServer4TestServerFactory serverFactory,
+            int lifetime,
+            string claimType,
+            string claimValue)
+        {
+            using (var server = serverFactory.Create())
+            {
+                var tokenFactory = server.CreateTokenFactory();
+
+                var tokenResult = await tokenFactory.CreateToken(
+                    lifetime: lifetime,
+                    claims: new List<Claim>
+                    {
+                        new Claim(claimType, claimValue),
+                    });
+
+                Assert.NotNull(tokenResult.Token);
             }
         }
 
