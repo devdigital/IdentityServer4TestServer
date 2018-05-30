@@ -227,13 +227,13 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             {
                 var tokenFactory = server.CreateTokenFactory();
 
-                var token = await tokenFactory.CreateClientToken(
+                var tokenResult = await tokenFactory.CreateClientToken(
                     lifetime: lifetime,
                     clientId: clientId,
                     scopes: scopes,
                     audiences: audiences);
 
-                Assert.NotNull(token);
+                Assert.NotNull(tokenResult.Token);
             }
         }
 
@@ -285,6 +285,37 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
                         Assert.NotNull(response.AccessToken);
                     }
                 }
+            }
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task CreateTokenFactoryReturnsToken(
+            TestIdentityServer4TestServerFactory serverFactory,
+            TestIdentityServer4TestClientFactory clientFactory,
+            string clientId,
+            string clientSecret,
+            string apiResourceName,
+            string apiResourceDisplayName,
+            int lifetime)
+        {
+            using (var server = serverFactory
+                .WithLogging(new XUnitLoggerFactory(this.output))
+                .WithApiResource(new ApiResource(apiResourceName, apiResourceDisplayName))
+                .WithClient(new Client
+                {
+                    ClientId = clientId,
+                    ClientSecrets = new List<Secret> { new Secret(clientSecret.Sha256()) },
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes = new List<string> { apiResourceName },
+                }).Create())
+            {
+                var tokenFactory = server.CreateTokenFactory();
+                var tokenResult = await tokenFactory.CreateToken(
+                    lifetime: lifetime,
+                    claims: new List<Claim>());
+
+                Assert.NotNull(tokenResult.Token);
             }
         }
     }
