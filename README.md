@@ -28,8 +28,8 @@ Use the server and client factories in your tests:
 [Theory]
 [AutoData]
 public async Task GetTokenValidClientReturns200(
-    TestIdentityServer4TestServerFactory serverFactory,
-    TestIdentityServer4TestClientFactory clientFactory,
+    MyServerFactory serverFactory,
+    MyClientFactory clientFactory,
     string clientId,
     string clientSecret,
     string apiResourceName,
