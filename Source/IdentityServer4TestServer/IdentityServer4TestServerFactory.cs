@@ -22,32 +22,34 @@ namespace IdentityServer4TestServer
     public abstract class IdentityServer4TestServerFactory<TServerFactory>
         where TServerFactory : IdentityServer4TestServerFactory<TServerFactory>
     {
-        private readonly List<Client> clients;
+        private readonly List<Client> currentClients;
 
-        private readonly List<IdentityResource> identityResources;
+        private readonly List<IdentityResource> currentIdentityResources;
 
-        private readonly List<ApiResource> apiResources;
+        private readonly List<ApiResource> currentApiResources;
 
-        private Action<WebHostBuilderContext, IConfigurationBuilder> configuration;
+        private Action<WebHostBuilderContext, IConfigurationBuilder> currentConfiguration;
 
-        private Action<IApplicationBuilder> configureApp;
+        private Action<IApplicationBuilder> currentConfigureApp;
 
-        private Action<WebHostBuilderContext, IServiceCollection> configureServices;
+        private Action<WebHostBuilderContext, IServiceCollection> currentConfigureServices;
 
-        private ILoggerFactory loggerFactory;
+        private ILoggerFactory currentLoggerFactory;
 
-        private IdentityServerEventCapture eventCapture;
+        private IdentityServerEventCapture currentEventCapture;
 
         private bool enableTokenCreation;
+
+        private IWebHostBuilder currentWebHostBuilder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServer4TestServerFactory{TServerFactory}"/> class.
         /// </summary>
         protected IdentityServer4TestServerFactory()
         {
-            this.clients = new List<Client>();
-            this.identityResources = new List<IdentityResource>();
-            this.apiResources = new List<ApiResource>();
+            this.currentClients = new List<Client>();
+            this.currentIdentityResources = new List<IdentityResource>();
+            this.currentApiResources = new List<ApiResource>();
             this.enableTokenCreation = true;
         }
 
@@ -58,7 +60,7 @@ namespace IdentityServer4TestServer
         /// <returns>The server factory.</returns>
         public TServerFactory WithLogging(ILoggerFactory loggerFactory)
         {
-            this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            this.currentLoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             return this as TServerFactory;
         }
 
@@ -89,7 +91,7 @@ namespace IdentityServer4TestServer
                 throw new ArgumentNullException(nameof(clients));
             }
 
-            this.clients.AddRange(clients);
+            this.currentClients.AddRange(clients);
             return this as TServerFactory;
         }
 
@@ -120,7 +122,7 @@ namespace IdentityServer4TestServer
                 throw new ArgumentNullException(nameof(identityResources));
             }
 
-            this.identityResources.AddRange(identityResources);
+            this.currentIdentityResources.AddRange(identityResources);
             return this as TServerFactory;
         }
 
@@ -151,7 +153,7 @@ namespace IdentityServer4TestServer
                 throw new ArgumentNullException(nameof(apiResources));
             }
 
-            this.apiResources.AddRange(apiResources);
+            this.currentApiResources.AddRange(apiResources);
             return this as TServerFactory;
         }
 
@@ -162,7 +164,7 @@ namespace IdentityServer4TestServer
         /// <returns>The server factory.</returns>
         public TServerFactory WithConfiguration(Action<WebHostBuilderContext, IConfigurationBuilder> configuration)
         {
-            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.currentConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             return this as TServerFactory;
         }
 
@@ -184,7 +186,7 @@ namespace IdentityServer4TestServer
         /// <returns>The server factory.</returns>
         public TServerFactory WithConfigureApp(Action<IApplicationBuilder> app)
         {
-            this.configureApp = app ?? throw new ArgumentNullException(nameof(app));
+            this.currentConfigureApp = app ?? throw new ArgumentNullException(nameof(app));
             return this as TServerFactory;
         }
 
@@ -195,7 +197,18 @@ namespace IdentityServer4TestServer
         /// <returns>The server factory.</returns>
         public TServerFactory WithConfigureServices(Action<WebHostBuilderContext, IServiceCollection> configureServices)
         {
-            this.configureServices = configureServices ?? throw new ArgumentNullException(nameof(configureServices));
+            this.currentConfigureServices = configureServices ?? throw new ArgumentNullException(nameof(configureServices));
+            return this as TServerFactory;
+        }
+
+        /// <summary>
+        /// Sets the web host builder.
+        /// </summary>
+        /// <param name="webHostBuilder">The web host builder.</param>
+        /// <returns>The server factory.</returns>
+        public TServerFactory WithWebHostBuilder(IWebHostBuilder webHostBuilder)
+        {
+            this.currentWebHostBuilder = webHostBuilder ?? throw new ArgumentNullException(nameof(webHostBuilder));
             return this as TServerFactory;
         }
 
@@ -206,7 +219,7 @@ namespace IdentityServer4TestServer
         /// <returns>The server factory.</returns>
         public TServerFactory WithEventCapture(IdentityServerEventCapture eventCapture)
         {
-            this.eventCapture = eventCapture ?? throw new ArgumentNullException(nameof(eventCapture));
+            this.currentEventCapture = eventCapture ?? throw new ArgumentNullException(nameof(eventCapture));
             return this as TServerFactory;
         }
 
@@ -216,8 +229,27 @@ namespace IdentityServer4TestServer
         /// <returns>The identity server.</returns>
         public virtual IIdentityServer Create()
         {
-            var hostBuilder = new WebHostBuilder()
-                .ConfigureAppConfiguration(this.configuration ?? this.DefaultConfiguration)
+            var hostBuilder = this.GetWebHostBuilder();
+
+            if (this.currentLoggerFactory != null)
+            {
+                hostBuilder = hostBuilder.ConfigureLogging(loggingBuilder =>
+                    loggingBuilder.AddProvider(new DefaultLoggingProvider(this.currentLoggerFactory)));
+            }
+
+            var testServer = new TestServer(hostBuilder);
+            return new IdentityServer(testServer);
+        }
+
+        private IWebHostBuilder GetWebHostBuilder()
+        {
+            if (this.currentWebHostBuilder != null)
+            {
+                return this.currentWebHostBuilder;
+            }
+
+            return new WebHostBuilder()
+                .ConfigureAppConfiguration(this.currentConfiguration ?? this.DefaultConfiguration)
                 .Configure(app =>
                 {
                     if (this.enableTokenCreation)
@@ -225,28 +257,19 @@ namespace IdentityServer4TestServer
                         app.UseTokenCreation();
                     }
 
-                    var configure = this.configureApp ?? this.DefaultConfigureApp;
+                    var configure = this.currentConfigureApp ?? this.DefaultConfigureApp;
                     configure(app);
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    if (this.eventCapture != null)
+                    if (this.currentEventCapture != null)
                     {
-                        services.AddSingleton<IEventSink>(new EventCaptureEventSink(this.eventCapture));
+                        services.AddSingleton<IEventSink>(new EventCaptureEventSink(this.currentEventCapture));
                     }
 
-                    var configure = this.configureServices ?? this.DefaultConfigureServices;
+                    var configure = this.currentConfigureServices ?? this.DefaultConfigureServices;
                     configure(context, services);
                 });
-
-            if (this.loggerFactory != null)
-            {
-                hostBuilder = hostBuilder.ConfigureLogging(loggingBuilder =>
-                    loggingBuilder.AddProvider(new DefaultLoggingProvider(this.loggerFactory)));
-            }
-
-            var testServer = new TestServer(hostBuilder);
-            return new IdentityServer(testServer);
         }
 
         private void DefaultConfiguration(WebHostBuilderContext context, IConfigurationBuilder builder)
@@ -263,19 +286,19 @@ namespace IdentityServer4TestServer
                 options.Events.RaiseErrorEvents = true;
             });
 
-            if (this.clients != null)
+            if (this.currentClients != null)
             {
-                identityServerConfig.AddInMemoryClients(this.clients);
+                identityServerConfig.AddInMemoryClients(this.currentClients);
             }
 
-            if (this.identityResources != null)
+            if (this.currentIdentityResources != null)
             {
-                identityServerConfig.AddInMemoryIdentityResources(this.identityResources);
+                identityServerConfig.AddInMemoryIdentityResources(this.currentIdentityResources);
             }
 
-            if (this.apiResources != null)
+            if (this.currentApiResources != null)
             {
-                identityServerConfig.AddInMemoryApiResources(this.apiResources);
+                identityServerConfig.AddInMemoryApiResources(this.currentApiResources);
             }
 
             identityServerConfig

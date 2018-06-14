@@ -16,6 +16,7 @@ namespace IdentityServer4TestServer
 
     /// <summary>
     /// Token creation middleware.
+    /// Adds endpoints that are used for token generation.
     /// </summary>
     internal class TokenCreationMiddleware
     {
