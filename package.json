@@ -1,6 +1,6 @@
 {
   "name": "IdentityServer4TestServer",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "main": "index.js",
   "repository": "https://github.com/devdigital/IdentityServer4TestServer.git",
   "author": "devdigital <devdigital.cloud@gmail.com>",
