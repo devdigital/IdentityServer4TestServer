@@ -5,6 +5,7 @@
 namespace IdentityServer4TestServer
 {
     using System.Collections.Generic;
+    using IdentityServer4TestServer.Token;
 
     /// <summary>
     /// Identity server token request.
