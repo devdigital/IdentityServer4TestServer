@@ -12,6 +12,7 @@ namespace IdentityServer4TestServer
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
+    using IdentityServer4TestServer.Token;
     using Microsoft.AspNetCore.TestHost;
     using Newtonsoft.Json;
 

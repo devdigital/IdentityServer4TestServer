@@ -4,6 +4,8 @@
 
 namespace IdentityServer4TestServer.IntegrationTests.Helpers
 {
+    using IdentityServer4TestServer.Factories;
+
     /// <summary>
     /// Identity server test server factory.
     /// </summary>

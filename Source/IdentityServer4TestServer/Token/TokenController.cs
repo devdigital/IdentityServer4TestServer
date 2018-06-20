@@ -2,11 +2,12 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-namespace IdentityServer4TestServer
+namespace IdentityServer4TestServer.Token
 {
     using System;
     using System.Threading.Tasks;
     using IdentityServer4;
+    using IdentityServer4TestServer.Validation;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>

@@ -2,12 +2,13 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-namespace IdentityServer4TestServer
+namespace IdentityServer4TestServer.Factories
 {
     using System;
     using System.Collections.Generic;
     using IdentityServer4.Models;
     using IdentityServer4.Services;
+    using IdentityServer4TestServer.Token;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;

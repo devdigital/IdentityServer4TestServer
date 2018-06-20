@@ -2,7 +2,7 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-namespace IdentityServer4TestServer
+namespace IdentityServer4TestServer.Factories
 {
     using System;
     using System.Net.Http;
@@ -11,7 +11,7 @@ namespace IdentityServer4TestServer
     /// <summary>
     /// Identity server.
     /// </summary>
-    /// <seealso cref="IdentityServer4TestServer.IIdentityServer" />
+    /// <seealso cref="IIdentityServer" />
     public class IdentityServer : IIdentityServer
     {
         private readonly TestServer testServer;

@@ -2,7 +2,7 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-namespace IdentityServer4TestServer
+namespace IdentityServer4TestServer.Factories
 {
     using System;
     using System.Net.Http;
