@@ -17,7 +17,7 @@ namespace IdentityServer4TestServer.Factories
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AcrValues"/> class.
-        /// </summary>
+        /// </summary>rsonal
         public AcrValues()
         {
             this.values = new Dictionary<string, string>();
@@ -34,11 +34,6 @@ namespace IdentityServer4TestServer.Factories
             if (string.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentNullException(nameof(key));
-            }
-
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentNullException(nameof(value));
             }
 
             if (this.values.ContainsKey(key))
