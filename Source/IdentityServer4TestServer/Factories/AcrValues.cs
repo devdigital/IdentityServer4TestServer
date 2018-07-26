@@ -17,7 +17,7 @@ namespace IdentityServer4TestServer.Factories
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AcrValues"/> class.
-        /// </summary>rsonal
+        /// </summary>
         public AcrValues()
         {
             this.values = new Dictionary<string, string>();
