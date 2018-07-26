@@ -36,11 +36,6 @@ namespace IdentityServer4TestServer.Factories
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
             if (this.values.ContainsKey(key))
             {
                 throw new InvalidOperationException($"Key '{key}' already added as ACR value.");

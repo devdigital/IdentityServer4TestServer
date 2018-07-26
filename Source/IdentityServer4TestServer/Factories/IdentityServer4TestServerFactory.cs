@@ -29,7 +29,7 @@ namespace IdentityServer4TestServer.Factories
 
         private readonly List<ApiResource> currentApiResources;
 
-        private Action<WebHostBuilderContext, IConfigurationBuilder> currentConfiguration;
+        private Action<WebHostBuilderContext, IConfigurationBuilder> currentAppConfiguration;
 
         private Action<IApplicationBuilder> currentConfigureApp;
 
@@ -159,13 +159,13 @@ namespace IdentityServer4TestServer.Factories
         }
 
         /// <summary>
-        /// Adds configuration.
+        /// Adds app configuration.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="appConfiguration">The configuration.</param>
         /// <returns>The server factory.</returns>
-        public TServerFactory WithConfiguration(Action<WebHostBuilderContext, IConfigurationBuilder> configuration)
+        public TServerFactory WithAppConfiguration(Action<WebHostBuilderContext, IConfigurationBuilder> appConfiguration)
         {
-            this.currentConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.currentAppConfiguration = appConfiguration ?? throw new ArgumentNullException(nameof(appConfiguration));
             return this as TServerFactory;
         }
 
@@ -225,6 +225,42 @@ namespace IdentityServer4TestServer.Factories
         }
 
         /// <summary>
+        /// Adds the configuration.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The server factory.</returns>
+        public TServerFactory WithConfiguration(IServerFactoryConfiguration configuration)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            configuration.Configure(this);
+            return this as TServerFactory;
+        }
+
+        /// <summary>
+        /// Adds the configurations.
+        /// </summary>
+        /// <param name="configurations">The configurations.</param>
+        /// <returns>The server factory.</returns>
+        public TServerFactory WithConfigurations(params IServerFactoryConfiguration[] configurations)
+        {
+            if (configurations == null)
+            {
+                throw new ArgumentNullException(nameof(configurations));
+            }
+
+            foreach (var configuration in configurations)
+            {
+                this.WithConfiguration(configuration);
+            }
+
+            return this as TServerFactory;
+        }
+
+        /// <summary>
         /// Creates this instance.
         /// </summary>
         /// <returns>The identity server.</returns>
@@ -250,7 +286,7 @@ namespace IdentityServer4TestServer.Factories
             }
 
             return new WebHostBuilder()
-                .ConfigureAppConfiguration(this.currentConfiguration ?? this.DefaultConfiguration)
+                .ConfigureAppConfiguration(this.currentAppConfiguration ?? this.DefaultConfiguration)
                 .Configure(app =>
                 {
                     if (this.enableTokenCreation)
