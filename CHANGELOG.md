@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.8.1"></a>
+## [0.8.1](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.8.0...v0.8.1) (2018-07-27)
+
+
+### Bug Fixes
+
+* change configuration interface to be generic ([80b68be](https://github.com/devdigital/IdentityServer4TestServer/commit/80b68be))
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.7.2...v0.8.0) (2018-07-26)
 
