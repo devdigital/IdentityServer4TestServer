@@ -229,14 +229,14 @@ namespace IdentityServer4TestServer.Factories
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <returns>The server factory.</returns>
-        public TServerFactory WithConfiguration(IServerFactoryConfiguration configuration)
+        public TServerFactory WithConfiguration(IServerFactoryConfiguration<TServerFactory> configuration)
         {
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            configuration.Configure(this);
+            configuration.Configure(this as TServerFactory);
             return this as TServerFactory;
         }
 
@@ -245,7 +245,7 @@ namespace IdentityServer4TestServer.Factories
         /// </summary>
         /// <param name="configurations">The configurations.</param>
         /// <returns>The server factory.</returns>
-        public TServerFactory WithConfigurations(params IServerFactoryConfiguration[] configurations)
+        public TServerFactory WithConfigurations(params IServerFactoryConfiguration<TServerFactory>[] configurations)
         {
             if (configurations == null)
             {

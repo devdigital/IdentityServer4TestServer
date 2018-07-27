@@ -7,14 +7,13 @@ namespace IdentityServer4TestServer.Factories
     /// <summary>
     /// Server factory configuration.
     /// </summary>
-    public interface IServerFactoryConfiguration
+    /// <typeparam name="TServerFactory">The type of the server factory.</typeparam>
+    public interface IServerFactoryConfiguration<in TServerFactory>
     {
         /// <summary>
         /// Configures the specified factory.
         /// </summary>
-        /// <typeparam name="TServerFactory">The type of the server factory.</typeparam>
         /// <param name="factory">The factory.</param>
-        void Configure<TServerFactory>(IdentityServer4TestServerFactory<TServerFactory> factory)
-            where TServerFactory : IdentityServer4TestServerFactory<TServerFactory>;
+        void Configure(TServerFactory factory);
     }
 }
