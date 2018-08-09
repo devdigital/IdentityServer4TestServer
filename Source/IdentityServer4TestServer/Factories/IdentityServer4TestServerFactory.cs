@@ -6,8 +6,11 @@ namespace IdentityServer4TestServer.Factories
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using IdentityServer4.Models;
     using IdentityServer4.Services;
+    using IdentityServer4TestServer.Events;
+    using IdentityServer4TestServer.Logging;
     using IdentityServer4TestServer.Token;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -264,7 +267,7 @@ namespace IdentityServer4TestServer.Factories
         /// Creates this instance.
         /// </summary>
         /// <returns>The identity server.</returns>
-        public virtual IIdentityServer Create()
+        public virtual Task<IIdentityServer> Create()
         {
             var hostBuilder = this.GetWebHostBuilder();
 
@@ -275,7 +278,9 @@ namespace IdentityServer4TestServer.Factories
             }
 
             var testServer = new TestServer(hostBuilder);
-            return new IdentityServer(testServer);
+            IIdentityServer identityServer = new IdentityServer(testServer);
+
+            return Task.FromResult(identityServer);
         }
 
         private IWebHostBuilder GetWebHostBuilder()

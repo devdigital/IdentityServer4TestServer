@@ -2,7 +2,7 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-namespace IdentityServer4TestServer
+namespace IdentityServer4TestServer.Logging
 {
     using System;
     using Microsoft.Extensions.Logging;

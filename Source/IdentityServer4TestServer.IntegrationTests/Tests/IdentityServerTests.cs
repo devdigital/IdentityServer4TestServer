@@ -11,6 +11,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
     using AutoFixture.Xunit2;
     using IdentityModel.Client;
     using IdentityServer4.Models;
+    using IdentityServer4TestServer.Events;
     using IdentityServer4TestServer.IntegrationTests.Helpers;
     using IdentityServer4TestServer.IntegrationTests.Logging;
     using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string apiResourceName,
             string apiResourceDisplayName)
         {
-            using (var server = serverFactory
+            using (var server = await serverFactory
                 .WithClient(new Client
                 {
                     ClientId = clientId,
@@ -74,7 +75,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string apiResourceDisplayName,
             IdentityServerEventCapture eventCapture)
         {
-            using (var server = serverFactory
+            using (var server = await serverFactory
                 .WithApiResource(new ApiResource(apiResourceName, apiResourceDisplayName))
                 .WithEventCapture(eventCapture)
                 .Create())
@@ -102,7 +103,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string apiResourceDisplayName,
             IdentityServerEventCapture eventCapture)
         {
-            using (var server = serverFactory
+            using (var server = await serverFactory
                 .WithClient(new Client
                 {
                     ClientId = clientId,
@@ -135,7 +136,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string apiResourceName,
             string apiResourceDisplayName)
         {
-            using (var server = serverFactory
+            using (var server = await serverFactory
                 .WithConfigureServices((context, services) =>
                 {
                     services
@@ -179,7 +180,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             TestIdentityServer4TestServerFactory serverFactory,
             int lifetime)
         {
-            using (var server = serverFactory.Create())
+            using (var server = await serverFactory.Create())
             {
                 var tokenFactory = server.CreateTokenFactory();
 
@@ -199,7 +200,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string claimType,
             string claimValue)
         {
-            using (var server = serverFactory.Create())
+            using (var server = await serverFactory.Create())
             {
                 var tokenFactory = server.CreateTokenFactory();
 
@@ -223,7 +224,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             IEnumerable<string> scopes,
             IEnumerable<string> audiences)
         {
-            using (var server = serverFactory.Create())
+            using (var server = await serverFactory.Create())
             {
                 var tokenFactory = server.CreateTokenFactory();
 
@@ -243,7 +244,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             TestIdentityServer4TestServerFactory serverFactory,
             TestIdentityServer4TestClientFactory clientFactory)
         {
-            using (var server = serverFactory.Create())
+            using (var server = await serverFactory.Create())
             {
                 using (var client = clientFactory.Create(server))
                 {
@@ -263,7 +264,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string apiResourceName,
             string apiResourceDisplayName)
         {
-            using (var server = serverFactory
+            using (var server = await serverFactory
                 .WithLogging(new XUnitLoggerFactory(this.output))
                 .WithApiResource(new ApiResource(apiResourceName, apiResourceDisplayName))
                 .WithClient(new Client
@@ -299,7 +300,7 @@ namespace IdentityServer4TestServer.IntegrationTests.Tests
             string apiResourceDisplayName,
             int lifetime)
         {
-            using (var server = serverFactory
+            using (var server = await serverFactory
                 .WithLogging(new XUnitLoggerFactory(this.output))
                 .WithApiResource(new ApiResource(apiResourceName, apiResourceDisplayName))
                 .WithClient(new Client
