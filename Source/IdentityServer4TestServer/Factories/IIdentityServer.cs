@@ -6,6 +6,7 @@ namespace IdentityServer4TestServer.Factories
 {
     using System;
     using System.Net.Http;
+    using IdentityServer4TestServer.Token;
 
     /// <summary>
     /// Identity server.

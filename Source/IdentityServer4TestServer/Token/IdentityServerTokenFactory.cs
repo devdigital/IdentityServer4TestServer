@@ -2,7 +2,7 @@
 // Copyright (c) DevDigital. All rights reserved.
 // </copyright>
 
-namespace IdentityServer4TestServer
+namespace IdentityServer4TestServer.Token
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,6 @@ namespace IdentityServer4TestServer
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
-    using IdentityServer4TestServer.Token;
     using Microsoft.AspNetCore.TestHost;
     using Newtonsoft.Json;
 
