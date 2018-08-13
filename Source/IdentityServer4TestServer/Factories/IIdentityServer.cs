@@ -5,8 +5,8 @@
 namespace IdentityServer4TestServer.Factories
 {
     using System;
-    using System.Net.Http;
     using IdentityServer4TestServer.Token;
+    using Microsoft.AspNetCore.TestHost;
 
     /// <summary>
     /// Identity server.
@@ -15,18 +15,12 @@ namespace IdentityServer4TestServer.Factories
     public interface IIdentityServer : IDisposable
     {
         /// <summary>
-        /// Gets the base address.
+        /// Gets the server.
         /// </summary>
         /// <value>
-        /// The base address.
+        /// The server.
         /// </value>
-        Uri BaseAddress { get; }
-
-        /// <summary>
-        /// Creates the handler.
-        /// </summary>
-        /// <returns>The HTTP message handler.</returns>
-        HttpMessageHandler CreateHandler();
+        TestServer Value { get; }
 
         /// <summary>
         /// Creates tools for token generation.
