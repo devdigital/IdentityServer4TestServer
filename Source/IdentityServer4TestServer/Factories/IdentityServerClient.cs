@@ -53,9 +53,9 @@ namespace IdentityServer4TestServer.Factories
         /// <returns>The discovery response.</returns>
         public async Task<DiscoveryResponse> GetDiscovery()
         {
-            using (var proxyHandler = this.server.CreateHandler())
+            using (var proxyHandler = this.server.Value.CreateHandler())
             {
-                using (var discoClient = new DiscoveryClient(this.server.BaseAddress.ToString(), proxyHandler))
+                using (var discoClient = new DiscoveryClient(this.server.Value.BaseAddress.ToString(), proxyHandler))
                 {
                     return await discoClient.GetAsync();
                 }
@@ -69,7 +69,7 @@ namespace IdentityServer4TestServer.Factories
         public async Task<TokenClient> CreateTokenClient()
         {
             var disco = await this.GetDiscovery();
-            using (var proxyHandler = this.server.CreateHandler())
+            using (var proxyHandler = this.server.Value.CreateHandler())
             {
                 return new TokenClient(disco.TokenEndpoint, this.ClientId, this.ClientSecret, proxyHandler);
             }
@@ -125,7 +125,7 @@ namespace IdentityServer4TestServer.Factories
         public async Task<TokenResponse> GetToken()
         {
             var disco = await this.GetDiscovery();
-            using (var proxyHandler = this.server.CreateHandler())
+            using (var proxyHandler = this.server.Value.CreateHandler())
             {
                 using (var tokenClient = new TokenClient(disco.TokenEndpoint, this.ClientId, this.ClientSecret, proxyHandler))
                 {
@@ -190,7 +190,7 @@ namespace IdentityServer4TestServer.Factories
         /// <returns>The HTTP response handler.</returns>
         public HttpMessageHandler CreateHandler()
         {
-            return this.server.CreateHandler();
+            return this.server.Value.CreateHandler();
         }
     }
 }

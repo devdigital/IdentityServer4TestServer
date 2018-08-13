@@ -5,7 +5,6 @@
 namespace IdentityServer4TestServer.Factories
 {
     using System;
-    using System.Net.Http;
     using IdentityServer4TestServer.Token;
     using Microsoft.AspNetCore.TestHost;
 
@@ -15,37 +14,29 @@ namespace IdentityServer4TestServer.Factories
     /// <seealso cref="IIdentityServer" />
     public class IdentityServer : IIdentityServer
     {
-        private readonly TestServer testServer;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServer"/> class.
         /// </summary>
         /// <param name="testServer">The test server.</param>
         public IdentityServer(TestServer testServer)
         {
-            this.testServer = testServer ?? throw new ArgumentNullException(nameof(testServer));
+            this.Value = testServer ?? throw new ArgumentNullException(nameof(testServer));
         }
 
-        /// <inheritdoc />
-        public Uri BaseAddress => this.testServer.BaseAddress;
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            this.testServer.Dispose();
-        }
-
-        /// <inheritdoc />
-        public HttpMessageHandler CreateHandler()
-        {
-            return this.testServer.CreateHandler();
-        }
+        /// <inheritdoc/>
+        public TestServer Value { get; }
 
         /// <inheritdoc />
         public IdentityServerTokenFactory CreateTokenFactory()
         {
             return new IdentityServerTokenFactory(
-                this.testServer);
+                this.Value);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.Value.Dispose();
         }
     }
 }
