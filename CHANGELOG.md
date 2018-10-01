@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.9.3"></a>
+## [0.9.3](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.9.0...v0.9.3) (2018-10-01)
+
+
+### Bug Fixes
+
+* make get web host builder protected ([057e46e](https://github.com/devdigital/IdentityServer4TestServer/commit/057e46e))
+
+
+
 <a name="0.9.1"></a>
 ## [0.9.1](https://github.com/devdigital/IdentityServer4TestServer/compare/v0.9.0...v0.9.1) (2018-10-01)
 
