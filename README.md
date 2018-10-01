@@ -35,7 +35,7 @@ public async Task GetTokenValidClientReturns200(
     string apiResourceName,
     string apiResourceDisplayName)
 {
-    using (var server = serverFactory
+    using (var server = await serverFactory
         .WithClient(new Client
         {
             ClientId = clientId,
@@ -71,7 +71,7 @@ The `WithWebHostBuilder` method takes an ASP.NET Core `IWebHostBuilder` and uses
 ```csharp
 // Program.cs
 public class Program
-{   
+{
     public static void Main(string[] args)
     {
         CreateWebHostBuilder(args).Build().Run();
@@ -86,7 +86,7 @@ public class Program
 [AutoData]
 public async Task Test(MyServerFactory serverFactory)
 {
-    using (var server = serverFactory
+    using (var server = await serverFactory
         .WithWebHostBuilder(Program.CreateWebHostBuilder(new string[] {})
         .Create())
     {
@@ -103,7 +103,7 @@ public class MyServerFactory : IdentityServer4TestServerFactory<MyServerFactory>
     public override async Task<IIdentityServer> Create()
     {
        this.WithWebHostBuilder(...);
-       
+
        return await base.Create();
     }
 }
@@ -116,7 +116,7 @@ Then the test becomes:
 [AutoData]
 public async Task Test(MyServerFactory serverFactory)
 {
-    using (var server = serverFactory.Create())
+    using (var server = await serverFactory.Create())
     {
         ...
     }
