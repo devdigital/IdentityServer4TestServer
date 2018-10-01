@@ -283,7 +283,7 @@ namespace IdentityServer4TestServer.Factories
             return Task.FromResult(identityServer);
         }
 
-        private IWebHostBuilder GetWebHostBuilder()
+        protected IWebHostBuilder GetWebHostBuilder()
         {
             if (this.currentWebHostBuilder != null)
             {
